@@ -48,9 +48,9 @@ public class ProblemCreator {
 		TSPvisualizer tv = new TSPvisualizer(p, 0);
 		TSPvisualizer tv1 = new TSPvisualizer(p, 1);
 		ArrayList<Node[][]> n = new ArrayList<Node[][]>();
-		n.add(new Node[][]{{new Node(null, 200, 300)}, {}});
+		n.add(new Node[][]{{new Node(null, 200, 300), new Node(null, 400, 50)}, {}});
 		Cards c = new Cards(n, Cards.TSP, p);
-		tv.display(null);
+		tv1.display(null);
 //		System.out.println(p.getCoords().get(0)[0]);
 	}
 	
