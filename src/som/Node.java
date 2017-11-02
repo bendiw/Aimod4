@@ -40,14 +40,7 @@ public class Node {
 	public Object getLabel() {
 		return this.label;
 	}
-	
 	public static void main(String[] args) {
-		double[] w = {4,2};
-		double x = 6.3;
-		double y = -4.0;
-		String mode = "mnist";
-		Node n = new Node(w,x,y);
-		n.setLabel("hest");
-		System.out.println(n.getLabel());
+		System.out.println("HEYEY");
 	}
 }

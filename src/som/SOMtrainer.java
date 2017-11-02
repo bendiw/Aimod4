@@ -72,6 +72,4 @@ public class SOMtrainer {
 		nodes[2][0] = 3;
 		System.out.println(nodes[0][0] +" "+ nodes[1][0]);
 	}
-	public static void main(String[] args) {
-	}
 }

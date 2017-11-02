@@ -7,4 +7,6 @@ public interface Problem {
 	
 	public int[] getCase(int i);
 	
+	public int[] getPrefDim();
+	
 }
