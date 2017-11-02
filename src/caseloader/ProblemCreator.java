@@ -24,13 +24,13 @@ public class ProblemCreator {
 			filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 			FileReader fr = new FileReader(new File(filename));
 			BufferedReader b = new BufferedReader(fr);
-			ArrayList<int[]> coords = new ArrayList<int[]>();
+			ArrayList<double[]> coords = new ArrayList<double[]>();
 			String[] data = b.readLine().trim().split(" ");
 			int numCities = Integer.parseInt(data[2]);
 			b.readLine();
 			for (int i = 0; i < numCities; i++) {
 				data = b.readLine().split(" ");
-				coords.add(new int[] {Integer.parseInt(data[1]), Integer.parseInt(data[2])});
+				coords.add(new double[] {Double.parseDouble(data[1]), Double.parseDouble(data[2])});
 			}
 			b.close();
 			return new TSPproblem(numCities, coords);
@@ -58,20 +58,16 @@ public class ProblemCreator {
 public class TSPproblem implements Problem{
 	private final int inputs=2;
 	private int cities;
-<<<<<<< HEAD
 	private ArrayList<double[]> coords;
-=======
-	private ArrayList<int[]> coords;
 	private int[] prefDim;
->>>>>>> refs/remotes/origin/master
 	
 	public TSPproblem(int cities, ArrayList<double[]> coords) {
 		this.coords = coords;
 		this.cities = cities;
 		int pref[] = new int[] {0,0};
-		for (int[] c : coords) {
-			pref[0] = Math.max(c[0], pref[0]);
-			pref[1] = Math.max(c[1], pref[1]);
+		for (double[] c : coords) {
+			pref[0] = (int)Math.max(c[0], pref[0]);
+			pref[1] = (int)Math.max(c[1], pref[1]);
 
 		}
 		this.prefDim = pref;
@@ -119,7 +115,7 @@ public class MNISTproblem implements Problem{
 	}
 
 	@Override
-	public int[] getCase(int i) {
+	public double[] getCase(int i) {
 		// TODO Auto-generated method stub
 		return null;
 	}

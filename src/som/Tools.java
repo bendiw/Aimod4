@@ -1,7 +1,7 @@
 package som;
 
 public class Tools {
-	static float getEuclidian(double[] v1, double[] v2) {
+	static double getEuclidian(double[] v1, double[] v2) {
 		float res = 0;
 		for (int i = 0; i < v2.length; i++) {
 			res+= Math.sqrt(Math.pow(v1[i]-v2[i],2));

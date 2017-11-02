@@ -36,7 +36,7 @@ public class SOMtrainer {
 		double[][] distances = new double[nodes.length][nodes[0].length];
 		int best_i;
 		int best_j;
-		int dist;
+		double dist;
 		double best = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < distances.length; i++) {
 			for (int j = 0; j < distances[0].length; j++) {
