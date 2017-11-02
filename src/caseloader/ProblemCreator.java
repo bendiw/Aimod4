@@ -42,6 +42,9 @@ public class ProblemCreator {
 
 		ProblemCreator pc = new ProblemCreator();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 790611a51842a2485068a089728cb4d2d3ebc4f9
 		TSPproblem p = (TSPproblem) pc.create("1", TSP);
 		TSPvisualizer tv = new TSPvisualizer(p, 0);
 		TSPvisualizer tv1 = new TSPvisualizer(p, 1);
@@ -50,10 +53,13 @@ public class ProblemCreator {
 		Cards c = new Cards(n, Cards.TSP, p);
 		tv1.display(null);
 //		System.out.println(p.getCoords().get(0)[0]);
+<<<<<<< HEAD
 =======
 		TSPproblem p = (TSPproblem) pc.create(1.txt", TSP);
 		System.out.println(p.getCoords().get(0)[0]);
 >>>>>>> master
+=======
+>>>>>>> 790611a51842a2485068a089728cb4d2d3ebc4f9
 	}
 	
 public class TSPproblem implements Problem{
