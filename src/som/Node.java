@@ -41,7 +41,7 @@ public class Node {
 		return this.label;
 	}
 	
-//	public static void main(String[] args) {
+	public static void main(String[] args) {
 //		double[] w = {4,2};
 //		double x = 6.3;
 //		double y = -4.0;
@@ -49,5 +49,5 @@ public class Node {
 //		Node n = new Node(w,x,y,mode);
 //		n.setLabel("hest");
 //		System.out.println(n.getLabel());
-//	}
+	}
 }
