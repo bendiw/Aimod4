@@ -59,6 +59,10 @@ public class TSPproblem implements Problem{
 		return this.coords;
 	}
 	
+	public int[] getCase(int i) {
+		return coords.get(i);
+	}
+	
 	@Override
 	public int getNumCases() {
 		// TODO Auto-generated method stub

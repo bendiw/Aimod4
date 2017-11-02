@@ -42,12 +42,12 @@ public class Node {
 	}
 	
 	public static void main(String[] args) {
-//		double[] w = {4,2};
-//		double x = 6.3;
-//		double y = -4.0;
-//		String mode = "mnist";
-//		Node n = new Node(w,x,y,mode);
-//		n.setLabel("hest");
-//		System.out.println(n.getLabel());
+		double[] w = {4,2};
+		double x = 6.3;
+		double y = -4.0;
+		String mode = "mnist";
+		Node n = new Node(w,x,y);
+		n.setLabel("hest");
+		System.out.println(n.getLabel());
 	}
 }
