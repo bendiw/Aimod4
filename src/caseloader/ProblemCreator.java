@@ -48,14 +48,14 @@ public class ProblemCreator {
 public class TSPproblem implements Problem{
 	private final int inputs=2;
 	private int cities;
-	private ArrayList<int[]> coords;
+	private ArrayList<double[]> coords;
 	
-	public TSPproblem(int cities, ArrayList<int[]> coords) {
+	public TSPproblem(int cities, ArrayList<double[]> coords) {
 		this.coords = coords;
 		this.cities = cities;
 	}
 	
-	public ArrayList<int[]> getCoords() {
+	public ArrayList<double[]> getCoords() {
 		return this.coords;
 	}
 	
@@ -71,7 +71,7 @@ public class TSPproblem implements Problem{
 	}
 
 	@Override
-	public int[] getCase(int i) {
+	public double[] getCase(int i) {
 		return coords.get(i);
 	}
 	

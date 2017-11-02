@@ -3,10 +3,8 @@ package som;
 <<<<<<< HEAD
 import java.io.IOException;
 import java.util.Random;
-=======
 import java.util.ArrayList;
 import java.util.Arrays;
->>>>>>> origin/master
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;
@@ -25,24 +23,25 @@ public class SOMtrainer {
 		r = new Random();
 		initNodes(numNodesX, numNodesY, weightLimits, posLimits);
 		for (int i = 0; i < iterations; i++) {
-			int[] sample = SampleCases();
+			double[] sample = SampleCases();
 			Node winner = MatchCases(sample);
 			UpdateWeights();
 		}
 	}
 	
-	public int[] SampleCases() {
+	public double[] SampleCases() {
 		return p.getCase(r.nextInt(p.getNumCases()));
 	}
 	
-	public Node MatchCases(int[] sample) {
+	public Node MatchCases(double[] sample) {
 		double[][] distances = new double[nodes.length][nodes[0].length];
 		int best_i;
 		int best_j;
+		int dist;
 		double best = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < distances.length; i++) {
 			for (int j = 0; j < distances[0].length; j++) {
-				distances[]
+				dist = Tools.getEuclidian(sample, nodes[i][j].getWeights());
 			}
 		}
 	}
