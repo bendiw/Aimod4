@@ -7,10 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import py4j.GatewayServer;
-import som.Node;
-import visuals.Cards;
-import visuals.TSPvisualizer;
-
 
 
 public class ProblemCreator {
@@ -36,14 +32,16 @@ public class ProblemCreator {
 			b.close();
 			return new TSPproblem(numCities, coords);
 		}else if(mode == MNIST) {
-//			b.close();
+			b.close();
 			return new MNISTproblem();
 		}
 		return null;
 	}
 	
 	public static void main(String[] args) throws IOException {
+
 		ProblemCreator pc = new ProblemCreator();
+<<<<<<< HEAD
 		TSPproblem p = (TSPproblem) pc.create("1", TSP);
 		TSPvisualizer tv = new TSPvisualizer(p, 0);
 		TSPvisualizer tv1 = new TSPvisualizer(p, 1);
@@ -52,24 +50,20 @@ public class ProblemCreator {
 		Cards c = new Cards(n, Cards.TSP, p);
 		tv1.display(null);
 //		System.out.println(p.getCoords().get(0)[0]);
+=======
+		TSPproblem p = (TSPproblem) pc.create(1.txt", TSP);
+		System.out.println(p.getCoords().get(0)[0]);
+>>>>>>> master
 	}
 	
 public class TSPproblem implements Problem{
 	private final int inputs=2;
 	private int cities;
 	private ArrayList<int[]> coords;
-	private int prefDim[];
 	
 	public TSPproblem(int cities, ArrayList<int[]> coords) {
 		this.coords = coords;
 		this.cities = cities;
-		int pref[] = new int[] {0,0};
-		for (int[] c : coords) {
-			pref[0] = Math.max(c[0], pref[0]);
-			pref[1] = Math.max(c[1], pref[1]);
-
-		}
-		this.prefDim = pref;
 	}
 	
 	public ArrayList<int[]> getCoords() {
@@ -88,8 +82,9 @@ public class TSPproblem implements Problem{
 	}
 
 	@Override
-	public int[] getPrefDim() {
 		return this.prefDim;
+	public int[] getCase(int i) {
+		return coords.get(i);
 	}
 	
 }
@@ -106,12 +101,6 @@ public class MNISTproblem implements Problem{
 	public int getInputSize() {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public int[] getPrefDim() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }
