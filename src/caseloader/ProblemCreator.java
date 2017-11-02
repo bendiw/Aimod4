@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import py4j.GatewayServer;
 import som.Node;
+import som.Tools;
 import visuals.TSPvisualizer;
 import visuals.Cards;
 
@@ -26,7 +27,7 @@ public class ProblemCreator {
 			BufferedReader b = new BufferedReader(fr);
 			ArrayList<double[]> coords = new ArrayList<double[]>();
 			String[] data = b.readLine().trim().split(" ");
-			int numCities = Integer.parseInt(data[2]);
+			int numCities = Integer.parseInt(data[data.length-1]);
 			b.readLine();
 			for (int i = 0; i < numCities; i++) {
 				data = b.readLine().split(" ");
@@ -45,12 +46,12 @@ public class ProblemCreator {
 
 		ProblemCreator pc = new ProblemCreator();
 		TSPproblem p = (TSPproblem) pc.create("1", TSP);
-		TSPvisualizer tv = new TSPvisualizer(p, 0);
-		TSPvisualizer tv1 = new TSPvisualizer(p, 1);
+		TSPvisualizer tv = new TSPvisualizer(p);
+		TSPvisualizer tv1 = new TSPvisualizer(p);
 		ArrayList<Node[][]> n = new ArrayList<Node[][]>();
-		n.add(new Node[][]{{new Node(null, 200, 300), new Node(null, 400, 50)}, {}});
-		Cards c = new Cards(n, Cards.TSP, p);
-		tv1.display(null);
+		n.add(new Node[][]{{new Node(200, 300), new Node(null, 400, 50)}, {}});
+		Cards c = new Cards(n, Tools.TSP, p);
+		tv1.display(null,0);
 //		System.out.println(p.getCoords().get(0)[0]);
 		System.out.println(p.getCoords().get(0)[0]);
 	}

@@ -14,8 +14,7 @@ import som.Node;
  
 public class Cards implements ActionListener {
     JPanel cards; //a panel that uses CardLayout
-    public final static int TSP = 0;
-    public final static int IMG = 1;
+
     private final int MODE;
     private final String[] titles = new String[] {"TSP ", "Image "};
     private final Problem p;

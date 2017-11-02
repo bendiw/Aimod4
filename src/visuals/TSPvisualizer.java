@@ -28,7 +28,7 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	   this.div = (int)Math.floor(Math.max(pref[0], pref[1])/800);
 	   this.RECT_WIDTH = pref[0]/this.div;
 	   this.RECT_HEIGHT = pref[1]/this.div;
-	   System.out.println(RECT_WIDTH);
+//	   System.out.println(RECT_WIDTH);
 	   setOpaque(true);
 	   setBackground(Color.WHITE);
 	   frame = new JFrame("TSP");
@@ -48,8 +48,8 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
    }
    
 	@Override
-	public void display(Node[][]nodes, int stateNum) {
-		this.nodes = nodes;
+	public void display(int stateNum) {
+//		this.nodes = nodes;
 		frame.setTitle("TSP iteration "+stateNum);
 		frame.setVisible(true);
 		
@@ -65,14 +65,18 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	   g.setColor(Color.GREEN);
 	   ArrayList<double[]> coords = p.getCoords();
 	   for (double[] c : coords) {
-		   g.fillRect((int)(RECT_X+c[0])/this.div, (int)(RECT_Y+c[1])/this.div, RECT_DIM*2, RECT_DIM*2);
+		   g.fillRect((int)(c[0]-RECT_DIM)/this.div, (int)(c[1]-RECT_DIM)/this.div, RECT_DIM*2, RECT_DIM*2);
 	   }
 	   
 	   //draw nodes
-//	   for (int i = 0; i < nodes.length; i++) {
-//		   double[] w = nodes[i][0].getWeights();
-//		   g.drawOval((int)w[0]-RECT_DIM, (int)w[1]-RECT_DIM, RECT_DIM*2, RECT_DIM*2);
-//	   }
+	   g.setColor(Color.yellow);
+	   for (int i = 0; i < nodes.length; i++) {
+		   for (int j = 0; j < nodes[0].length; j++) {
+			   double[] w = nodes[i][j].getWeights();
+			   System.out.println(w[0]+" "+w[1]);
+			   g.fillOval(((int)w[0]-RECT_DIM)/this.div, (int)(w[1]-RECT_DIM)/this.div, RECT_DIM*2, RECT_DIM*2);
+		   }
+	   }
 	   
    }
 

@@ -13,6 +13,29 @@ public class Tools {
 		return res;
 	}
 	
+	static double getTSPeuclidian(double[] v1, double[]v2, int len) {
+		double[] first;
+		double[] second;
+		if(v1[0]<v2[0]) {
+			first = v1;
+			second = v2;
+		}else {
+			first = v2;
+			second = v1;
+		}
+		double normalDist = getEuclidian(v1, v2);
+		double crossDist = first[0]+len-second[0];
+		return Math.min(normalDist, crossDist);
+	}
+	
+	static double getDiscriminant(double[] v1, double[] v2) {
+		float res = 0;
+		for (int i = 0; i < v2.length; i++) {
+			res+= (Math.pow(v1[i]-v2[i],2));
+		}
+		return res;
+	}
+	
 	static double getNeighborhoodRadius(double mapRadius, int iteration, int numIterations) {
 		double timeConstant = numIterations/Math.log(mapRadius);
 		return mapRadius * Math.exp(-(double)iteration/timeConstant);
