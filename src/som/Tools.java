@@ -1,6 +1,10 @@
 package som;
 
 public class Tools {
+	
+    public final static int TSP = 0;
+    public final static int IMG = 1;
+    
 	static double getEuclidian(double[] v1, double[] v2) {
 		float res = 0;
 		for (int i = 0; i < v2.length; i++) {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import py4j.GatewayServer;
 import som.Node;
-import som.TSPvisualizer;
+import visuals.TSPvisualizer;
 import visuals.Cards;
 
 
