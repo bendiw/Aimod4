@@ -69,6 +69,11 @@ public class TSPproblem implements Problem{
 	public int getInputSize() {
 		return inputs;
 	}
+
+	@Override
+	public int[] getCase(int i) {
+		return coords.get(i);
+	}
 	
 }
 

@@ -5,4 +5,8 @@ public interface Problem {
 	
 	public int getInputSize();
 	
+	public int[] getCase(int i);
+	
+	public int[] getPrefDim();
+	
 }
