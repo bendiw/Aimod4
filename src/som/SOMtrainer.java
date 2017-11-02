@@ -34,12 +34,13 @@ public class SOMtrainer {
 		initNodes(numNodesX, numNodesY, weightLimits, posLimits);
 		for (int i = 0; i < iterations; i++) {
 			double[] sample = SampleCases();
-			Node winner = MatchCases(sample);
+			double[][] distArray = MatchCases(sample);
+      Node winner = getWinner(distArray);
 			UpdateWeights(winner, i, iterations, distArray, sample);
-			
 			if(i%displayInterval==0) {
 				
 			}
+
 		}
 	}
 	
@@ -57,17 +58,30 @@ public class SOMtrainer {
 		return p.getCase(r.nextInt(p.getNumCases()));
 	}
 	
-	public Node MatchCases(double[] sample) {
+	public double[][] MatchCases(double[] sample) {
 		double[][] distances = new double[nodes.length][nodes[0].length];
-		int best_i;
-		int best_j;
 		double dist;
-		double best = Double.POSITIVE_INFINITY;
 		for (int i = 0; i < distances.length; i++) {
 			for (int j = 0; j < distances[0].length; j++) {
 				dist = Tools.getEuclidian(sample, nodes[i][j].getWeights());
+				distances[i][j] = dist;
 			}
 		}
+		return distances;
+	}
+	
+	public Node getWinner(double[][] distances) {
+		Double bestValue = Double.POSITIVE_INFINITY;
+		Node bestNode = null;
+		for (int i = 0; i < distances.length; i++) {
+			for (int j = 0; j < distances[0].length; j++) {
+				if (distances[i][j] < bestValue) {
+					bestNode = nodes[i][j];
+					bestValue = distances[i][j];
+				}
+			}
+		}
+		return bestNode;
 	}
 	
 	public void initNodes(int numNodesX, int numNodesY, double[] weightLimits, double[] posLimits) {
