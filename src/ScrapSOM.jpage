@@ -1,0 +1,3 @@
+import caseloader.ProblemCreator;
+import caseloader.Problem;
+TSPproblem p = (TSPproblem) ProblemCreator.create("C:\\Users\\Bendik\\Documents\\GitHub\\Aimod4\\TSP\\1.txt", TSP);
