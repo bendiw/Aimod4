@@ -1,7 +1,7 @@
 package caseloader;
 
 public interface Problem {
-	public int[] getGridSize();
+	public int getNumCases();
 	
 	public int getInputSize();
 	
