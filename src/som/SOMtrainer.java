@@ -1,12 +1,9 @@
 package som;
 
-<<<<<<< HEAD
 import java.io.IOException;
 import java.util.Random;
-=======
 import java.util.ArrayList;
 import java.util.Arrays;
->>>>>>> origin/master
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;

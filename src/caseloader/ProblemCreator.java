@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import py4j.GatewayServer;
+import som.Node;
+import som.TSPvisualizer;
+import visuals.Cards;
 
 
 public class ProblemCreator {
@@ -32,7 +35,7 @@ public class ProblemCreator {
 			b.close();
 			return new TSPproblem(numCities, coords);
 		}else if(mode == MNIST) {
-			b.close();
+//			b.close();
 			return new MNISTproblem();
 		}
 		return null;
@@ -41,10 +44,6 @@ public class ProblemCreator {
 	public static void main(String[] args) throws IOException {
 
 		ProblemCreator pc = new ProblemCreator();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 790611a51842a2485068a089728cb4d2d3ebc4f9
 		TSPproblem p = (TSPproblem) pc.create("1", TSP);
 		TSPvisualizer tv = new TSPvisualizer(p, 0);
 		TSPvisualizer tv1 = new TSPvisualizer(p, 1);
@@ -53,23 +52,25 @@ public class ProblemCreator {
 		Cards c = new Cards(n, Cards.TSP, p);
 		tv1.display(null);
 //		System.out.println(p.getCoords().get(0)[0]);
-<<<<<<< HEAD
-=======
-		TSPproblem p = (TSPproblem) pc.create(1.txt", TSP);
 		System.out.println(p.getCoords().get(0)[0]);
->>>>>>> master
-=======
->>>>>>> 790611a51842a2485068a089728cb4d2d3ebc4f9
 	}
 	
 public class TSPproblem implements Problem{
 	private final int inputs=2;
 	private int cities;
 	private ArrayList<int[]> coords;
+	private int[] prefDim;
 	
 	public TSPproblem(int cities, ArrayList<int[]> coords) {
 		this.coords = coords;
 		this.cities = cities;
+		int pref[] = new int[] {0,0};
+		for (int[] c : coords) {
+			pref[0] = Math.max(c[0], pref[0]);
+			pref[1] = Math.max(c[1], pref[1]);
+
+		}
+		this.prefDim = pref;
 	}
 	
 	public ArrayList<int[]> getCoords() {
@@ -91,6 +92,11 @@ public class TSPproblem implements Problem{
 	public int[] getCase(int i) {
 		return coords.get(i);
 	}
+
+	@Override
+	public int[] getPrefDim() {
+		return this.prefDim;
+	}
 	
 }
 
@@ -106,6 +112,18 @@ public class MNISTproblem implements Problem{
 	public int getInputSize() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public int[] getCase(int i) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int[] getPrefDim() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
