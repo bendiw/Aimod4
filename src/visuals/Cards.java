@@ -19,8 +19,11 @@ public class Cards implements ActionListener {
     private final int MODE;
     private final String[] titles = new String[] {"TSP ", "Image "};
     private final Problem p;
+    private JFrame frame;
+    private int index;
 //    final static String BUTTONPANEL = "Card with JButtons";
 //    final static String TEXTPANEL = "Card with JTextField";
+	private int num;
      
     public void addComponentToPane(Container pane, ArrayList<Node[][]> nodes) {
         //Put the JComboBox in a JPanel to get a nicer look.
@@ -72,19 +75,22 @@ public class Cards implements ActionListener {
 //		String e = (String) evt.
 		if(evt.getActionCommand()=="Next") {
 			cl.next(cards);
+			this.index = (this.index+1)%this.num;
+			frame.setTitle(this.titles[this.MODE]+" "+this.index);
 		}else {
 			cl.previous(cards);
+			this.index=(this.index-1)%this.num;
 		}
 	}
      
 	private void createAndShowGUI(ArrayList<Node[][]> nodes) {
         //Create and set up the window.
-        JFrame frame = new JFrame(this.titles[this.MODE]);
+		this.index = 0;
+        this.frame = new JFrame(this.titles[this.MODE]+" "+this.index);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         
+        
         //Create and set up the content pane.
         addComponentToPane(frame.getContentPane(), nodes);
-         
         //Display the window.
         frame.pack();
         frame.setVisible(true);
@@ -98,6 +104,7 @@ public class Cards implements ActionListener {
     public Cards(ArrayList<Node[][]> nodes, int mode, Problem p) {
     	this.MODE = mode;
     	this.p = p;
+    	this.num = nodes.size();
     	/* Use an appropriate Look and Feel */
         try {
             //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -120,7 +127,7 @@ public class Cards implements ActionListener {
             public void run() {
                 createAndShowGUI(nodes);
             }
-        });    	
+        });
 
     }
     
