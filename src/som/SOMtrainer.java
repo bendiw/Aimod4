@@ -7,6 +7,9 @@ import java.util.Arrays;
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;
+import caseloader.ProblemCreator.TSPproblem;
+import visuals.SOMvisualizer;
+import visuals.TSPvisualizer;
 
 public class SOMtrainer {
 
@@ -14,20 +17,42 @@ public class SOMtrainer {
 	private Problem p;
 	private Random r;
 	private Node[][] nodes;
+	private double initRadius;
+	private double learningRate;
+	private SOMvisualizer v;
 	
 	
-	public SOMtrainer(String filename, int mode, int numNodesX, int numNodesY, double[] weightLimits, double[] posLimits, int iterations) throws IOException {
+	public SOMtrainer(String filename, int mode, int numNodesX, int numNodesY, double[] weightLimits, double[] posLimits, int iterations, int initRad, double learningRate) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
+		this.initRadius = initRad;
+		this.learningRate = learningRate;
 		p = pc.create(filename, mode);
+		if(mode==Tools.TSP) {
+			this.v = new TSPvisualizer((TSPproblem)p);			
+		}
 		r = new Random();
 		initNodes(numNodesX, numNodesY, weightLimits, posLimits);
 		for (int i = 0; i < iterations; i++) {
 			double[] sample = SampleCases();
 			Node winner = MatchCases(sample);
-			UpdateWeights();
+			UpdateWeights(winner, i, iterations, distArray, sample);
+			
+			if(i%displayInterval==0) {
+				
+			}
 		}
 	}
 	
+	
+	private void UpdateWeights(Node winner, int iter, int maxIter, double[][] dist, double[] sample) {
+		double nRad = Tools.getNeighborhoodRadius(this.initRadius, iter, maxIter);
+		for (int i = 0; i < dist.length; i++) {
+			for (int j = 0; j < dist[0].length; j++) {
+				nodes[i][j].setWeights(Tools.getAdjustedWeight(nodes[i][j].getWeights(), sample, nRad, this.learningRate, dist[i][j]));
+			}
+		}
+	}
+
 	public double[] SampleCases() {
 		return p.getCase(r.nextInt(p.getNumCases()));
 	}

@@ -22,7 +22,7 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
    private Node[][] nodes;
    private final int div;
 
-   public TSPvisualizer(TSPproblem p, int stateNum) {
+   public TSPvisualizer(TSPproblem p) {
 	   this.p = p;
 	   int[] pref = p.getPrefDim();
 	   this.div = (int)Math.floor(Math.max(pref[0], pref[1])/800);
@@ -31,15 +31,15 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	   System.out.println(RECT_WIDTH);
 	   setOpaque(true);
 	   setBackground(Color.WHITE);
-	   frame = new JFrame("TSP iteration "+stateNum);
+	   frame = new JFrame("TSP");
 	   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	   frame.getContentPane().add(this);
 	   frame.pack();
 	   frame.setLocationByPlatform(true);
    }
    
-   public TSPvisualizer(TSPproblem p, int stateNum, Node[][] nodes) {
-	   this(p, stateNum);
+   public TSPvisualizer(TSPproblem p, Node[][] nodes) {
+	   this(p);
 	   this.nodes= nodes;
    }
    
@@ -48,8 +48,9 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
    }
    
 	@Override
-	public void display(Node[][]nodes) {
+	public void display(Node[][]nodes, int stateNum) {
 		this.nodes = nodes;
+		frame.setTitle("TSP iteration "+stateNum);
 		frame.setVisible(true);
 		
 	}
