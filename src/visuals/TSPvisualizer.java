@@ -62,9 +62,9 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	   //
 	   //draw cities
 	   g.setColor(Color.GREEN);
-	   ArrayList<int[]> coords = p.getCoords();
-	   for (int[] c : coords) {
-		   g.fillRect((RECT_X+c[0])/this.div, (RECT_Y+c[1])/this.div, RECT_DIM*2, RECT_DIM*2);
+	   ArrayList<double[]> coords = p.getCoords();
+	   for (double[] c : coords) {
+		   g.fillRect((int)(RECT_X+c[0])/this.div, (int)(RECT_Y+c[1])/this.div, RECT_DIM*2, RECT_DIM*2);
 	   }
 	   
 	   //draw nodes
