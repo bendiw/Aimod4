@@ -60,9 +60,9 @@ public class TSPproblem implements Problem{
 	}
 	
 	@Override
-	public int[] getGridSize() {
+	public int getNumCases() {
 		// TODO Auto-generated method stub
-		return new int[] {this.cities};
+		return this.cities;
 	}
 
 	@Override
@@ -75,9 +75,9 @@ public class TSPproblem implements Problem{
 public class MNISTproblem implements Problem{
 
 	@Override
-	public int[] getGridSize() {
+	public int getNumCases() {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	@Override
