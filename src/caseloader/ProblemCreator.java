@@ -82,7 +82,6 @@ public class TSPproblem implements Problem{
 	}
 
 	@Override
-		return this.prefDim;
 	public int[] getCase(int i) {
 		return coords.get(i);
 	}
