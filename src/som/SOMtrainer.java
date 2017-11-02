@@ -1,5 +1,8 @@
 package som;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import caseloader.Problem;
 
 public class SOMtrainer {
@@ -10,5 +13,7 @@ public class SOMtrainer {
 	
 	public SOMtrainer() {
 		
+	}
+	public static void main(String[] args) {
 	}
 }
