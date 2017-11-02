@@ -1,7 +1,12 @@
 package som;
 
+<<<<<<< HEAD
 import java.io.IOException;
 import java.util.Random;
+=======
+import java.util.ArrayList;
+import java.util.Arrays;
+>>>>>>> origin/master
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;
@@ -66,5 +71,7 @@ public class SOMtrainer {
 		nodes[1][0] = 2;
 		nodes[2][0] = 3;
 		System.out.println(nodes[0][0] +" "+ nodes[1][0]);
+	}
+	public static void main(String[] args) {
 	}
 }
