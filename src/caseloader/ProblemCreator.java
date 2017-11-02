@@ -15,10 +15,12 @@ public class ProblemCreator {
 	public static final int MNIST = 1;
 	
 	
+	
 	public Problem create(String filename, int mode) throws IOException{
-		FileReader fr = new FileReader(new File(filename));
-		BufferedReader b = new BufferedReader(fr);
 		if(mode==TSP) {
+			filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
+			FileReader fr = new FileReader(new File(filename));
+			BufferedReader b = new BufferedReader(fr);
 			ArrayList<int[]> coords = new ArrayList<int[]>();
 			String[] data = b.readLine().trim().split(" ");
 			int numCities = Integer.parseInt(data[2]);
@@ -38,8 +40,9 @@ public class ProblemCreator {
 	
 	public static void main(String[] args) throws IOException {
 
-//		ProblemCreator pc = new ProblemCreator();
-//		TSPproblem p = (TSPproblem) pc.create("C:\\Users\\Bendik\\Documents\\GitHub\\Aimod4\\TSP\\1.txt", TSP);
+		ProblemCreator pc = new ProblemCreator();
+		TSPproblem p = (TSPproblem) pc.create(1.txt", TSP);
+		System.out.println(p.getCoords().get(0)[0]);
 	}
 	
 public class TSPproblem implements Problem{
