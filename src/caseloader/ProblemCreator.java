@@ -22,8 +22,8 @@ public class ProblemCreator {
 	
 	
 	public Problem create(String filename, int mode) throws IOException{
+		filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 		if(mode==TSP) {
-			filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 			FileReader fr = new FileReader(new File(filename));
 			BufferedReader b = new BufferedReader(fr);
 			ArrayList<double[]> coords = new ArrayList<double[]>();
@@ -37,6 +37,7 @@ public class ProblemCreator {
 			b.close();
 			return new TSPproblem(numCities, coords);
 		}else if(mode == MNIST) {
+			FileReader fr = new FileReader(new File(filename));
 //			b.close();
 			return new MNISTproblem();
 		}
@@ -128,6 +129,12 @@ public class MNISTproblem implements Problem{
 
 	@Override
 	public int[] getPrefDim() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<double[]> getAllCases() {
 		// TODO Auto-generated method stub
 		return null;
 	}
