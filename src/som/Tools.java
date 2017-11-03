@@ -38,8 +38,7 @@ public class Tools {
 		return res;
 	}
 	
-	static double getNeighborhoodRadius(double mapRadius, int iteration, int numIterations) {
-		double timeConstant = numIterations/Math.log(mapRadius);
+	static double getNeighborhoodRadius(double mapRadius, int iteration, double timeConstant) {
 		return mapRadius * Math.exp(-(double)iteration/timeConstant);
 	}
 	
