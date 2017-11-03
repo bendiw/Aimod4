@@ -5,13 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import py4j.GatewayServer;
-import som.Node;
-import som.Tools;
-import visuals.TSPvisualizer;
-import visuals.Cards;
 
 
 public class ProblemCreator {
@@ -89,7 +82,8 @@ public class ProblemCreator {
 	
 	public static void main(String[] args) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
-		MNISTproblem m = (MNISTproblem)pc.create("", pc.MNIST);
+		MNISTproblem m = (MNISTproblem)pc.create("", MNIST);
+		System.out.println(m.getNumCases());
 	}
 	
 public class TSPproblem implements Problem{
@@ -126,7 +120,6 @@ public class TSPproblem implements Problem{
 	
 	@Override
 	public int getNumCases() {
-		// TODO Auto-generated method stub
 		return this.cities;
 	}
 
@@ -151,7 +144,6 @@ public class TSPproblem implements Problem{
 
 	@Override
 	public double getLabel(int i) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
@@ -190,7 +182,7 @@ public class MNISTproblem implements Problem{
 
 	@Override
 	public int[] getPrefDim() {
-		return new int[] {MNISTlen, MNISTlen};
+		return new int[] {28, 28};
 	}
 
 	@Override
