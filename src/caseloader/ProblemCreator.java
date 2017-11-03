@@ -82,14 +82,14 @@ public class ProblemCreator {
 
 			b.close();
 
-			return new MNISTproblem();
+			return new MNISTproblem(train, test, trainLabels, testLabels);
 		}
 		return null;
 	}
 	
 	public static void main(String[] args) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
-		pc.create("", pc.MNIST);
+		MNISTproblem m = (MNISTproblem)pc.create("", pc.MNIST);
 	}
 	
 public class TSPproblem implements Problem{
@@ -160,45 +160,58 @@ public class TSPproblem implements Problem{
 
 public class MNISTproblem implements Problem{
 	
-	public MNISTproblem(ArrayList<double[]> train, ArrayList<double[]> test, ArrayList<double[]> train_labels, ArrayList<double[]> test_labels) {
-		
+	private ArrayList<double[]> train;
+	private ArrayList<double[]> test;
+	private ArrayList<Double> trainLabels;
+	private ArrayList<Double> testLabels;
+	
+	
+	public MNISTproblem(ArrayList<double[]> train, ArrayList<double[]> test, ArrayList<Double> trainLabels, ArrayList<Double> testLabels) {
+		this.train = train;
+		this.test = test;
+		this.trainLabels = trainLabels;
+		this.testLabels = testLabels;
 	}
 
 	@Override
 	public int getNumCases() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.train.size();
 	}
 
 	@Override
 	public int getInputSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return MNISTlen;
 	}
 
 	@Override
 	public double[] getCase(int i) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.train.get(i);
 	}
 
 	@Override
 	public int[] getPrefDim() {
-		// TODO Auto-generated method stub
-		return null;
+		return new int[] {MNISTlen, MNISTlen};
 	}
 
 	@Override
 	public ArrayList<double[]> getAllCases() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.train;
 	}
 
 	@Override
 	public double getLabel(int i) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.trainLabels.get(i);
 	}
+
+	public ArrayList<double[]> getTest() {
+		return test;
+	}
+
+	public ArrayList<Double> getTestLabels() {
+		return testLabels;
+	}
+
+	
 	
 }
 	
