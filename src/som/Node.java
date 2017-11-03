@@ -27,6 +27,6 @@ public class Node {
 		return this.label;
 	}
 	public static void main(String[] args) {
-		System.out.println("HEYEY");
 	}
+
 }
