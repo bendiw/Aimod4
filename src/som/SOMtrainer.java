@@ -171,13 +171,10 @@ public class SOMtrainer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		SOMtrainer som = new SOMtrainer("4",Tools.TSP, 200, 1, new double[] {200,1000}, 1500000, 20, 0.1, 100000);
+		SOMtrainer som = new SOMtrainer("7",Tools.TSP, 200, 1, new double[] {200,1000}, 1500000, 20, 0.1, 100000);
 		int[][] nodes = new int[3][1];
-//		System.out.println(nodes.length);
-//		System.out.println(nodes[0].length);
 		nodes[0][0] = 1;
 		nodes[1][0] = 2;
 		nodes[2][0] = 3;
-//		System.out.println(nodes[0][0] +" "+ nodes[1][0]);
 	}
 }
