@@ -11,7 +11,7 @@ public class Node {
 	public Node(double[] weights) {
 		this.weights = weights;
 		this.label = null;
-		this.winningLabels = null;
+		this.winningLabels = new ArrayList<Double>();
 
 	}
 	

@@ -154,7 +154,6 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 
 				   g.setColor(Color.black);
 				   g.drawLine((int)(w[0])+gOffset, (int)(w[1])+gOffset, (int)(w1[0])+gOffset, (int)(w1[1])+gOffset);
-
 			   }
 		   }
 	}
