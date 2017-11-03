@@ -44,7 +44,7 @@ public class Node {
 			setLabel(winSum/(double)winNum);
 			this.winNum = 0;
 			this.winSum = 0;
-		}
+    }
 	}
 
 }

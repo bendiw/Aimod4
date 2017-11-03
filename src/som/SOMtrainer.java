@@ -1,5 +1,9 @@
 package som;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 import java.util.ArrayList;
@@ -23,27 +27,39 @@ public class SOMtrainer {
 	private double learningRate;
 	private double initLearningRate;
 	private int mode;
+	private int iterations;
+	private int mbs;
+	private boolean writeToFile;
 	private SOMvisualizer v;
 	
-	
 	public SOMtrainer(String filename, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, int initRad, double initLearningRate, int displayInterval) throws IOException {
+		this(filename, false, false, mode, mbs, numNodesX, numNodesY, weightLimits, iterations,initRad, initLearningRate, displayInterval);
+	}
+	
+	public SOMtrainer(String filename, boolean initFromFile, boolean writeToFile, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, int initRad, double initLearningRate, int displayInterval) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
 		this.mode = mode;
 		this.initRadius = initRad;
 		this.displayInterval = displayInterval;
 		this.initLearningRate = initLearningRate;
 		this.learningRate = this.initLearningRate;
-		p = pc.create(filename, mode);
-		r = new Random();
-		initNodes(numNodesX, numNodesY, weightLimits);
+		this.iterations = iterations;
+		this.mbs = mbs;
+		this.p = pc.create(filename, mode);
+		this.r = new Random();
+		if (! initFromFile) {
+			initNodes(numNodesX, numNodesY, weightLimits);
+		} else {
+			loadNodes(weightLimits);
+		}
+	}
 		
-		
-		for (int i = 0; i < iterations; i++) {
+	public void run() {
+		for (int i = 0; i < this.iterations; i++) {
 			if (this.mode == Tools.IMG) {
-				imageLoop(mbs, iterations);
+				imageLoop(mbs, this.iterations);
 			} else {
 				double[] sample = SampleCases();
-	//			double[][] distArray = MatchCases(sample);
 				int[] winner = getWinnerIndex(sample);
 				UpdateWeights(winner, i, iterations, sample);
 			}
@@ -61,9 +77,10 @@ public class SOMtrainer {
 					this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
 					v.display(i);
 				}
-//				System.out.println(mult);
 			}
-
+		}
+		if (writeToFile) {
+			saveNodes();
 		}
 		if(mode==Tools.TSP) {
 			TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
@@ -215,11 +232,72 @@ public class SOMtrainer {
 		return dist;
 	}
 	
+	public void saveNodes() {
+		String saveString = "";
+		for (int i = 0; i < nodes.length; i++) {
+			if (i>0) {saveString += "\n";}
+			for (int j = 0; j < nodes[0].length; j++) {
+				if (j > 0) { saveString += " ";}
+				saveString += nodes[i][j].getLabel() +";";
+				double[] w = nodes[i][j].getWeights();
+				for (int j2 = 0; j2 < w.length; j2++) {
+					if (j2 > 0) { saveString += "," + w[j2];}
+				}
+			}
+		}
+		BufferedWriter writer = null;
+		try {
+		    writer = new BufferedWriter( new FileWriter("saved_nodes.txt"));
+		    writer.write(saveString);
+		}
+		catch ( IOException e){}
+		finally {
+		    try {
+		        if ( writer != null)
+		        writer.close( );
+		    }
+		    catch ( IOException e) {}
+		}
+	}
+	
+	public void loadNodes() {
+		BufferedReader reader = null;
+		ArrayList<String[]> stringList = new ArrayList<String[]>();
+		try {
+			reader = new BufferedReader(new FileReader("saved_nodes.txt"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				stringList.add(line.split("\\s+"));
+			}
+		} catch (IOException e) {}
+		finally {
+		    try {
+		        if ( reader != null)
+		        reader.close( );
+		    }
+		    catch ( IOException e) {}
+		}
+		this.nodes = new Node[stringList.size()][stringList.get(0).length];
+		for (int i = 0; i < nodes.length; i++) {
+			for (int j = 0; j < nodes[0].length; j++) {
+				String[] labW = stringList.get(i)[j].split(";");
+				String[] weightString = labW[1].split(",");
+				double[] weights = new double[weightString.length];
+				for (int k = 0; k < weightString.length; k++) {
+					weights[k] = Double.parseDouble(weightString[k]);
+				}
+				nodes[i][j] = new Node(weights);
+				nodes[i][j].setLabel(Double.parseDouble(labW[0]));
+			}
+		}
+	}
+	
 	public static void main(String[] args) throws IOException {
 		SOMtrainer som = new SOMtrainer("7",Tools.IMG, 200, 10, 10, new double[] {0,255}, 1000, 5, 0.1, 250);
 		int[][] nodes = new int[3][1];
 		nodes[0][0] = 1;
 		nodes[1][0] = 2;
 		nodes[2][0] = 3;
+
 	}
 }
