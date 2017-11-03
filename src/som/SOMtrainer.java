@@ -24,7 +24,7 @@ public class SOMtrainer {
 	private SOMvisualizer v;
 	
 	
-	public SOMtrainer(String filename, int mode, int numNodesX, int numNodesY, double[] weightLimits, int iterations, int initRad, double initLearningRate, int displayInterval) throws IOException {
+	public SOMtrainer(String filename, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, int initRad, double initLearningRate, int displayInterval) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
 		this.mode = mode;
 		this.initRadius = initRad;
@@ -35,10 +35,14 @@ public class SOMtrainer {
 		r = new Random();
 		initNodes(numNodesX, numNodesY, weightLimits);
 		for (int i = 0; i < iterations; i++) {
-			double[] sample = SampleCases();
-//			double[][] distArray = MatchCases(sample);
-			int[] winner = getWinnerIndex(sample);
-			UpdateWeights(winner, i, iterations, sample);
+			if (this.mode == Tools.IMG) {
+				imageLoop(mbs, iterations);
+			} else {
+				double[] sample = SampleCases();
+	//			double[][] distArray = MatchCases(sample);
+				int[] winner = getWinnerIndex(sample);
+				UpdateWeights(winner, i, iterations, sample);
+			}
 			double mult = Math.exp(-(i/(double)iterations));
 			this.learningRate = this.initLearningRate*mult;
 			if(i%displayInterval==0 || i==iterations-1) {
@@ -55,6 +59,21 @@ public class SOMtrainer {
 		}
 		TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
 		TSPv.display(0);
+	}
+	
+	private void imageLoop(int mbs, int iterations) {
+		for (int i = 0; i < mbs; i++) {
+			int sampleIndex = r.nextInt(p.getNumCases());
+			double[] sample = p.getCase(sampleIndex);
+			int[] winner = getWinnerIndex(sample);
+			UpdateWeights(winner, i, iterations, sample);
+			nodes[winner[0]][winner[1]].addToWins(p.getLabel(sampleIndex));
+		}
+		for (int i = 0; i < nodes.length; i++) {
+			for (int j = 0; j < nodes[0].length; j++) {
+				nodes[i][j].setLabelFromWins();
+			}
+		}
 	}
 	
 	private void UpdateWeights(int[] winner, int iter, int maxIter, double[] sample) {
@@ -90,7 +109,7 @@ public class SOMtrainer {
 //		}
 //		return distances;
 //	}
-	
+	//returns winners location in output grid
 	public int[] getWinnerIndex(double[] sample) {
 		Double bestValue = Double.POSITIVE_INFINITY;
 //		Node bestNode = null;
@@ -98,8 +117,7 @@ public class SOMtrainer {
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[0].length; j++) {
 				double dist = Tools.getDiscriminant(sample, nodes[i][j].getWeights());
-
-				if (dist< bestValue) {
+				if (dist < bestValue) {
 //					bestNode = nodes[i][j];
 					index[0] = i;
 					index[1] = j;
