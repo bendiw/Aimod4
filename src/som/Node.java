@@ -43,7 +43,7 @@ public class Node {
 			sum += label;
 			count++;
 		}
-		int avg = (int)Math.round(sum/count);
+		int avg = Math.toIntExact(Math.round(sum/count));
 		setLabel(avg);
 		this.winningLabels.clear();
 	}
