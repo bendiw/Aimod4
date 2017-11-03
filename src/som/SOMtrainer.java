@@ -11,7 +11,9 @@ import java.util.Arrays;
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;
+import caseloader.ProblemCreator.MNISTproblem;
 import caseloader.ProblemCreator.TSPproblem;
+import visuals.IMGvisualizer;
 import visuals.SOMvisualizer;
 import visuals.TSPvisualizer;
 
@@ -72,23 +74,44 @@ public class SOMtrainer {
 					}
 				}else {
 					System.out.println("iter "+i);
+					this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
+					v.display(i);
 				}
 			}
 		}
 		if (writeToFile) {
 			saveNodes();
 		}
-		TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
-		TSPv.display(0);
+		if(mode==Tools.TSP) {
+			TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
+			TSPv.display(0);
+		}else {
+			System.out.println("accuracy: "+testIMG());
+		}
+	}
+	
+	private double testIMG() {
+		int correct = 0;
+		ArrayList<double[]> test = ((MNISTproblem) p).getTest();
+		ArrayList<Double> lab = ((MNISTproblem) p).getTestLabels();
+		for (int i = 0; i < test.size(); i++) {
+			int[] winner = getWinnerIndex(test.get(i));
+			double num = (Math.round((double)nodes[winner[0]][winner[1]].getLabel()));
+			if(num==lab.get(i)) {
+				correct++;
+			}
+		}
+		return (double)correct/(double)test.size();
 	}
 	
 	private void imageLoop(int mbs, int iterations) {
+		int sampleIndex = r.nextInt(p.getNumCases()-mbs);
 		for (int i = 0; i < mbs; i++) {
-			int sampleIndex = r.nextInt(p.getNumCases());
 			double[] sample = p.getCase(sampleIndex);
 			int[] winner = getWinnerIndex(sample);
 			UpdateWeights(winner, i, iterations, sample);
 			nodes[winner[0]][winner[1]].addToWins(p.getLabel(sampleIndex));
+			sampleIndex++;
 		}
 		for (int i = 0; i < nodes.length; i++) {
 			for (int j = 0; j < nodes[0].length; j++) {
@@ -270,19 +293,11 @@ public class SOMtrainer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-//		SOMtrainer som = new SOMtrainer("7",Tools.IMG, 20, 10, 10, new double[] {200,1000}, 10000, 20, 0.1, 100);
-//		int[][] nodes = new int[3][1];
-//		nodes[0][0] = 1;
-//		nodes[1][0] = 2;
-//		nodes[2][0] = 3;
-//		String l = "1 8 6.5 2";
-//		String[] a = l.split("\\s+");
-//		double[] b = new double[a.length];
-//		for (int i = 0; i < b.length; i++) {
-//			b[i] = Double.parseDouble(a[i]);
-//		}
-//		for (double d : b) {
-//			System.out.println(d);
-//		}
+		SOMtrainer som = new SOMtrainer("7",Tools.IMG, 200, 10, 10, new double[] {0,255}, 1000, 5, 0.1, 250);
+		int[][] nodes = new int[3][1];
+		nodes[0][0] = 1;
+		nodes[1][0] = 2;
+		nodes[2][0] = 3;
+
 	}
 }
