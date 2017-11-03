@@ -7,6 +7,8 @@ public interface Problem {
 	
 	public int getInputSize();
 	
+	public double getLabel(int i);
+	
 	public double[] getCase(int i);
 	
 	public int[] getPrefDim();
