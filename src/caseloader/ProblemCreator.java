@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import py4j.GatewayServer;
 import som.Node;
@@ -21,8 +22,8 @@ public class ProblemCreator {
 	
 	
 	public Problem create(String filename, int mode) throws IOException{
+		filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 		if(mode==TSP) {
-			filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 			FileReader fr = new FileReader(new File(filename));
 			BufferedReader b = new BufferedReader(fr);
 			ArrayList<double[]> coords = new ArrayList<double[]>();
@@ -30,12 +31,13 @@ public class ProblemCreator {
 			int numCities = Integer.parseInt(data[data.length-1]);
 			b.readLine();
 			for (int i = 0; i < numCities; i++) {
-				data = b.readLine().split(" ");
+				data = b.readLine().trim().split(" ");
 				coords.add(new double[] {Double.parseDouble(data[1]), Double.parseDouble(data[2])});
 			}
 			b.close();
 			return new TSPproblem(numCities, coords);
 		}else if(mode == MNIST) {
+			FileReader fr = new FileReader(new File(filename));
 //			b.close();
 			return new MNISTproblem();
 		}
@@ -44,16 +46,6 @@ public class ProblemCreator {
 	
 	public static void main(String[] args) throws IOException {
 
-		ProblemCreator pc = new ProblemCreator();
-		TSPproblem p = (TSPproblem) pc.create("1", TSP);
-		TSPvisualizer tv = new TSPvisualizer(p);
-		TSPvisualizer tv1 = new TSPvisualizer(p);
-		ArrayList<Node[][]> n = new ArrayList<Node[][]>();
-		n.add(new Node[][]{{new Node(200, 300), new Node(null, 400, 50)}, {}});
-		Cards c = new Cards(n, Tools.TSP, p);
-		tv1.display(null,0);
-//		System.out.println(p.getCoords().get(0)[0]);
-		System.out.println(p.getCoords().get(0)[0]);
 	}
 	
 public class TSPproblem implements Problem{
@@ -61,21 +53,31 @@ public class TSPproblem implements Problem{
 	private int cities;
 	private ArrayList<double[]> coords;
 	private int[] prefDim;
+	private double[] offset;
 	
 	public TSPproblem(int cities, ArrayList<double[]> coords) {
 		this.coords = coords;
 		this.cities = cities;
 		int pref[] = new int[] {0,0};
+		double[] offset = new double[] {0,0};
 		for (double[] c : coords) {
 			pref[0] = (int)Math.max(c[0], pref[0]);
 			pref[1] = (int)Math.max(c[1], pref[1]);
-
+			offset[0] = Math.min(c[0], offset[0]);
+			offset[1] = Math.min(c[1], offset[1]);
 		}
 		this.prefDim = pref;
+		offset[0] = Math.abs(offset[0]);
+		offset[1] = Math.abs(offset[1]);
+		this.offset = offset;
 	}
 	
 	public ArrayList<double[]> getCoords() {
 		return this.coords;
+	}
+	
+	public double[] getOffset() {
+		return this.offset;
 	}
 	
 	@Override
@@ -92,6 +94,10 @@ public class TSPproblem implements Problem{
 	@Override
 	public double[] getCase(int i) {
 		return coords.get(i);
+	}
+	
+	public ArrayList<double[]> getAllCases(){
+		return this.coords;
 	}
 
 	@Override
@@ -123,6 +129,12 @@ public class MNISTproblem implements Problem{
 
 	@Override
 	public int[] getPrefDim() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<double[]> getAllCases() {
 		// TODO Auto-generated method stub
 		return null;
 	}

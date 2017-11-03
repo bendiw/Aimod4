@@ -1,5 +1,7 @@
 package caseloader;
 
+import java.util.ArrayList;
+
 public interface Problem {
 	public int getNumCases();
 	
@@ -8,5 +10,7 @@ public interface Problem {
 	public double[] getCase(int i);
 	
 	public int[] getPrefDim();
+	
+	public ArrayList<double[]> getAllCases();
 	
 }

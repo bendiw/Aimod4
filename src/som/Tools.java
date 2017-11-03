@@ -5,7 +5,7 @@ public class Tools {
     public final static int TSP = 0;
     public final static int IMG = 1;
     
-	static double getEuclidian(double[] v1, double[] v2) {
+	static double getEuclidian(int[] v1, int[] v2) {
 		float res = 0;
 		for (int i = 0; i < v2.length; i++) {
 			res+= Math.sqrt(Math.pow(v1[i]-v2[i],2));
@@ -13,9 +13,11 @@ public class Tools {
 		return res;
 	}
 	
-	static double getTSPeuclidian(double[] v1, double[]v2, int len) {
-		double[] first;
-		double[] second;
+	
+	
+	static double getTSPeuclidian(int[] v1, int[]v2, int len) {
+		int[] first;
+		int[] second;
 		if(v1[0]<v2[0]) {
 			first = v1;
 			second = v2;

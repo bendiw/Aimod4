@@ -7,6 +7,7 @@ public class Node {
 	
 	public Node(double[] weights) {
 		this.weights = weights;
+		this.label = null;
 
 	}
 	
