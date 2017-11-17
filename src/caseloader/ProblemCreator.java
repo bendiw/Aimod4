@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ProblemCreator {
@@ -23,11 +24,15 @@ public class ProblemCreator {
 			FileReader fr = new FileReader(new File(filename));
 			BufferedReader b = new BufferedReader(fr);
 			ArrayList<double[]> coords = new ArrayList<double[]>();
+			b.readLine();
+			b.readLine();
 			String[] data = b.readLine().trim().split(" ");
 			int numCities = Integer.parseInt(data[data.length-1]);
 			b.readLine();
+			b.readLine();
 			for (int i = 0; i < numCities; i++) {
 				data = b.readLine().trim().split(" ");
+				System.out.println(Arrays.toString(data));
 				coords.add(new double[] {Double.parseDouble(data[1]), Double.parseDouble(data[2])});
 			}
 			b.close();
@@ -202,6 +207,12 @@ public class MNISTproblem implements Problem{
 
 	public ArrayList<Double> getTestLabels() {
 		return testLabels;
+	}
+
+	@Override
+	public double[] getOffset() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

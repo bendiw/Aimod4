@@ -11,11 +11,13 @@ import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import caseloader.Problem;
 import caseloader.ProblemCreator;
 import caseloader.ProblemCreator.MNISTproblem;
 import caseloader.ProblemCreator.TSPproblem;
+import visuals.Cards;
 import visuals.IMGvisualizer;
 import visuals.SOMvisualizer;
 import visuals.TSPvisualizer;
@@ -32,6 +34,7 @@ public class SOMtrainer {
 	private int mode;
 	private int iterations;
 	private int mbs;
+	private boolean train[];
 	private double timeConstant;
 	private boolean writeToFile;
 	private double[][][][] distMatrix;
@@ -67,6 +70,20 @@ public class SOMtrainer {
 	}
 		
 	public void run() {
+		ArrayList<Node[][]> states = new ArrayList<Node[][]>();
+		if(mode==Tools.TSP) {
+//			this.v = new TSPvisualizer((TSPproblem)p, this.nodes, 0);		
+			states.add(Tools.cloneNodes(nodes));
+//			v.display(0);
+			System.out.println("Distance: "+getTotalDistance());
+		}else {
+			train = new boolean[p.getNumCases()];
+			System.out.println("learning rate: "+this.learningRate);
+			System.out.println("radius: "+Tools.getNeighborhoodRadius(this.initRadius, 0, this.timeConstant)+"\n\n");
+			this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
+			v.display(0);
+
+		}
 		for (int i = 0; i < this.iterations; i++) {
 			if (this.mode == Tools.IMG) {
 				imageLoop(mbs, this.iterations);
@@ -79,9 +96,10 @@ public class SOMtrainer {
 			this.learningRate = this.initLearningRate*mult;
 			if(i%displayInterval==0 || i==iterations-1) {
 				if(mode==Tools.TSP) {
-					this.v = new TSPvisualizer((TSPproblem)p, this.nodes, 0);			
-					v.display(i);
+//					this.v = new TSPvisualizer((TSPproblem)p, this.nodes, 0);		
+//					v.display(i);
 					if(i!=0) {
+						states.add(Tools.cloneNodes(this.nodes));
 						System.out.println("Distance: "+getTotalDistance());
 					}
 				}else {
@@ -99,8 +117,10 @@ public class SOMtrainer {
 		if(mode==Tools.TSP) {
 			TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
 			TSPv.display(0);
+			Cards c = new Cards(states, this.mode, p);
 		}else {
-			System.out.println("accuracy: "+testIMG());
+			System.out.println("Training set accuracy: "+testTrainIMG());
+			System.out.println("Test set accuracy: "+testIMG());
 		}
 	}
 	
@@ -130,9 +150,30 @@ public class SOMtrainer {
 		return (double)correct/(double)test.size();
 	}
 	
+	private double testTrainIMG() {
+		int correct = 0;
+		ArrayList<double[]> train = new ArrayList<double[]>();
+		ArrayList<Double> lab = new ArrayList<Double>();
+		for (int i = 0; i < p.getNumCases(); i++) {
+			if(this.train[i]) {
+				train.add(p.getCase(i));
+				lab.add(p.getLabel(i));
+			}
+		}
+		for (int i = 0; i < train.size(); i++) {
+			int[] winner = getWinnerIndex(train.get(i));
+			double num = (Math.round((double)nodes[winner[0]][winner[1]].getLabel()));
+			if(num==lab.get(i)) {
+				correct++;
+			}
+		}
+		return (double)correct/(double)train.size();
+	}
+	
 	private void imageLoop(int mbs, int iterations) {
 		int sampleIndex = r.nextInt(p.getNumCases()-mbs);
 		for (int i = 0; i < mbs; i++) {
+			this.train[sampleIndex] = true;
 			double[] sample = p.getCase(sampleIndex);
 			int[] winner = getWinnerIndex(sample);
 			UpdateWeights(winner, i, iterations, sample);
@@ -200,16 +241,27 @@ public class SOMtrainer {
 	
 	public void initNodes(int numNodesX, int numNodesY, double[] weightLimits) {
 		nodes = new Node[numNodesX][numNodesY];
+		double[] origo = new double[2];
+		double ang=0;
+		double radius=0;
+		if(mode==Tools.TSP) {
+			origo[0] = (this.p.getPrefDim()[0]+this.p.getOffset()[0])/2;
+			origo[1] = (this.p.getPrefDim()[1]+this.p.getOffset()[1])/2;
+			ang = (360/((double)numNodesX))*(Math.PI/180.0);
+			System.out.println(ang);
+			radius=(this.p.getPrefDim()[0]+this.p.getOffset()[0])/3.5;
+		}
 		double[] weights = new double[p.getInputSize()];
-		double xPos;
-		double yPos;
 		for (int i = 0; i < numNodesX; i++) {
 			for (int j = 0; j < numNodesY; j++) {
-				for (int j2 = 0; j2 < p.getInputSize(); j2++) {
-					weights[j2] = weightLimits[0] + r.nextDouble()*(weightLimits[1]-weightLimits[0]);
+				if(this.mode==Tools.TSP) {
+					weights[0] = origo[0]+radius*Math.cos(i*ang);
+					weights[1] = origo[1]+radius*Math.sin(i*ang);
+				}else {
+					for (int j2 = 0; j2 < p.getInputSize(); j2++) {
+						weights[j2] = weightLimits[0] + r.nextDouble()*(weightLimits[1]-weightLimits[0]);
+					}
 				}
-//				xPos = posLimits[0] + r.nextDouble()*(posLimits[1]-posLimits[0]);
-//				yPos = posLimits[0] + r.nextDouble()*(posLimits[1]-posLimits[0]);
 				nodes[i][j] = new Node(weights.clone());
 			}
 		}
@@ -241,6 +293,7 @@ public class SOMtrainer {
 			}
 		}
 		for (int i = 0; i < nodes.length; i++) {
+			nodes[i][0].sortLabel();
 			ArrayList<double[]> lab = (ArrayList<double[]>)nodes[i][0].getLabel();
 			if(lab != null) {
 				for (double[] ds : lab) {
@@ -329,7 +382,7 @@ public class SOMtrainer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		SOMtrainer som = new SOMtrainer("7",false, true,Tools.IMG, 50, 25,25, new double[] {0,255}, 20000, 2.0, 0.02, 2000);
+		SOMtrainer som = new SOMtrainer("8",false, false,Tools.IMG, 200, 20,20, new double[] {0,255},1000, 2, 0.2, 200);
 		som.run();
 	}
 }

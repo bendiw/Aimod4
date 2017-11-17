@@ -1,6 +1,9 @@
 package som;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Node {
 	
@@ -23,6 +26,24 @@ public class Node {
 	
 	public void setWeights(double[] weights) {
 		this.weights = weights;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void sortLabel() {
+		if(this.label==null) {
+			return;
+		}
+		ArrayList<double[]> lab = (ArrayList<double[]>)this.label;
+		ArrayList<double[]> sortlab = new ArrayList<double[]>();
+		Map<Integer,Double> dist = new HashMap<Integer,Double>(lab.size());
+		for (int i = 0; i < lab.size(); i++) {
+			dist.put(i, Tools.getDiscriminant(weights, lab.get(i)));
+		}
+		Set<Integer> sorted = Tools.sortByValue(dist).keySet();
+		for (Integer integer : sorted) {
+			sortlab.add(lab.get(integer));
+		}
+		this.label=sortlab;
 	}
 	
 	
