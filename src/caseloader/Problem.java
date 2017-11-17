@@ -13,6 +13,9 @@ public interface Problem {
 	
 	public int[] getPrefDim();
 	
+	public double[] getOffset();
+	
+	
 	public ArrayList<double[]> getAllCases();
 	
 }
