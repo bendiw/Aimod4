@@ -3,7 +3,7 @@ package visuals;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,16 +11,15 @@ import javax.swing.JPanel;
 import org.math.plot.Plot2DPanel;
 
 import caseloader.ProblemCreator.MNISTproblem;
-import caseloader.ProblemCreator.TSPproblem;
 import som.Node;
 
 public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	private static final int tempSol = 0;
-	private static final int finalSol = 1;
 	private final MNISTproblem p;
-	private final int RECT_DIM = 6;
+	private final int frameSIZE = 400;
 	private final int RECT_WIDTH;
 	private final int RECT_HEIGHT;
+	private final int[] NEURON_DIM;
 	private JFrame frame;
 	private static final int RECT_X = 10;
 	private static final int RECT_Y = RECT_X;
@@ -28,23 +27,27 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	private final double div;
 	private final int mode;
 	private final double[] dim;
+	private final Color[] cols = new Color[] {Color.blue, Color.cyan, Color.yellow, Color.red, Color.green,
+			Color.orange, Color.pink, Color.magenta, new Color(170, 66, 244), new Color(209, 244, 66)};
 	
 	
-	public IMGvisualizer(MNISTproblem p, int mode) {
+	public IMGvisualizer(MNISTproblem p, int mode, Node[][] nodes) {
+		this.nodes = nodes;
 		this.p = p;
 		this.mode = mode;
 		int[] pref = p.getPrefDim();
 		double size = Math.max(pref[0], pref[1]);
 		if(size > 800) {
-			this.div = (size/800);
-		}else if (size < 800){
-			this.div = (1/(800/size));
+			this.div = (size/frameSIZE);
+		}else if (size < frameSIZE){
+			this.div = (1/(frameSIZE/size));
 		}else {
 			this.div = 1;
 		}
 		this.RECT_WIDTH =(int) ((pref[0])/this.div)+12;
 		this.RECT_HEIGHT = (int)((pref[1])/this.div)+12;
 		this.dim = new double[] {RECT_WIDTH, RECT_HEIGHT};
+		this.NEURON_DIM = new int[] {(int)(dim[0]/nodes.length), (int)(dim[1]/nodes[0].length)};
 		setOpaque(true);
 		setBackground(Color.WHITE);
 		frame = new JFrame("IMG");
@@ -67,38 +70,6 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 		
 	}
 	
-//	public void drawFinal(Graphics g) {
-//		super.paintComponent(g);
-//		g.setColor(Color.GREEN);
-//		ArrayList<double[]> coords = p.getCoords();
-//		
-//		
-//		//draw all cities
-//		for (double[] c : coords) {
-//			double[] cf = fixCoords(c);
-//			g.fillRect((int)(cf[0])-RECT_DIM+gOffset, (int)(cf[1])-RECT_DIM+gOffset, RECT_DIM*2, RECT_DIM*2);
-//		}
-//		double[] currCity = null;
-//		double[] firstCity = null;
-//		for (int i = 0; i < nodes.length; i++) {
-//			ArrayList<double[]>lab = (ArrayList<double[]>) nodes[i][0].getLabel();
-//			if(lab!=null) {
-//				for (double[] ds : lab) {
-//					if(firstCity==null) {
-//						currCity = fixCoords(ds);
-//						firstCity = fixCoords(ds);
-//					}else {
-//						g.setColor(Color.BLACK);
-////						double[] cFix = fixCoords(currCity);
-//						double[] dFix = fixCoords(ds);
-//						g.drawLine((int)(currCity[0])+gOffset, (int)(currCity[1])+gOffset, (int)(dFix[0])+gOffset, (int)(dFix[1])+gOffset);
-//						currCity = dFix;
-//					}
-//				}
-//			}
-//		}
-//		g.drawLine((int)(currCity[0]), (int)(currCity[1]), (int)(firstCity[0]), (int)(firstCity[1]));
-//	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -109,44 +80,35 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	public double[] fixCoords(double[] coords) {
 		double[] newCoords = new double[] {coords[0], coords[1]};
 		//x coord
-		newCoords[0] = (coords[0]+offset[0])/div; //offset and scale
+		newCoords[0] = (coords[0])/div; //offset and scale
 		
 		//y coord
-		newCoords[1] = dim[1]-((coords[1]+offset[1])/div); //flip vertical, offset and scale
+		newCoords[1] = dim[1]-((coords[1])/div); //flip vertical, offset and scale
 		
 		return newCoords;
+	}
+	
+	private Color getCol(double label) {
+		float r = (float)((label/10));
+//		float g = (float)((120.0+label*10)/255);
+//		float b = (float) ((10.0+label*10)/255);
+//		System.out.println(r+" "+g+" "+b+"\n\n");
+//		return new Color(r,(float)0.0,(float)0.0);
+		return cols[(int)Math.round(label)];
 	}
 	
 	private void drawTemp(Graphics g) {
 		// draw board borders
 	   g.drawRect(0,0, RECT_WIDTH + 2 * RECT_X, RECT_HEIGHT + 2 * RECT_Y);
-	   //
-	   //draw cities
-	   g.setColor(Color.GREEN);
-	   ArrayList<double[]> coords = p.getCoords();
-	   for (double[] c : coords) {
-		   double[] cf = fixCoords(c);
-			g.fillRect((int)(cf[0])-RECT_DIM+gOffset, (int)(cf[1])-RECT_DIM+gOffset, RECT_DIM*2, RECT_DIM*2);
-	   }
+	   //TODO: draw grid
 	   
-	   //draw nodes, lines
+	   //draw neurons
 	   for (int i = 0; i < nodes.length; i++) {
 		   for (int j = 0; j < nodes[0].length; j++) {
-			   double[] w = fixCoords(nodes[i][j].getWeights());
-			   double[] w1;
-			   if(i==0) {
-				   w1 = fixCoords(nodes[nodes.length-1][j].getWeights());
-			   }else {
-				   w1 = fixCoords(nodes[i-1][j].getWeights());
-			   }
-			   g.setColor(Color.yellow);
-			   g.fillOval((int)((w[0]-RECT_DIM))+gOffset, (int)((w[1]-RECT_DIM))+gOffset, RECT_DIM*2, RECT_DIM*2);
-
-			   g.setColor(Color.black);
-			   g.drawLine((int)(w[0])+gOffset, (int)(w[1])+gOffset, (int)(w1[0])+gOffset, (int)(w1[1])+gOffset);
-
+			   g.setColor(getCol((double)nodes[i][j].getLabel()));
+			   g.fillRect((int)(i*NEURON_DIM[0]), (int)(j*NEURON_DIM[1]), NEURON_DIM[0], NEURON_DIM[1]);
 		   }
-	   }
+	   } 	   
 	}
 
 	   @Override

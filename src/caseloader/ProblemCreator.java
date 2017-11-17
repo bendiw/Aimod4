@@ -174,6 +174,7 @@ public class MNISTproblem implements Problem{
 	public int getInputSize() {
 		return MNISTlen;
 	}
+	
 
 	@Override
 	public double[] getCase(int i) {

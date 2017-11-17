@@ -6,12 +6,14 @@ public class Node {
 	
 	private double[] weights;
 	private Object label;
-	private ArrayList<Double> winningLabels;
+	private double winSum;
+	private int winNum;
 	
 	public Node(double[] weights) {
 		this.weights = weights;
-		this.label = null;
-		this.winningLabels = new ArrayList<Double>();
+		this.label = 0.0;
+		this.winSum = 0.0;
+		this.winNum = 0;
 
 	}
 	
@@ -33,19 +35,16 @@ public class Node {
 	}
 	
 	public void addToWins(double label) {
-		this.winningLabels.add(label);
+		this.winSum+=label;
+		this.winNum+=1;
 	}
 	
 	public void setLabelFromWins() {
-		double sum = 0;
-		double count = 0;
-		for (double label : this.winningLabels) {
-			sum += label;
-			count++;
-		}
-		int avg = Math.toIntExact(Math.round(sum/count));
-		setLabel(avg);
-		this.winningLabels.clear();
+		if(winNum>0) {
+			setLabel(winSum/(double)winNum);
+			this.winNum = 0;
+			this.winSum = 0;
+    }
 	}
 
 }
