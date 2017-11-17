@@ -25,6 +25,7 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	private JFrame frame;
 	private static final int RECT_X = 10;
 	private static final int RECT_Y = RECT_X;
+	private static final int maxSize = 650;
 	private Node[][] nodes;
 	private final double div;
 	private final double[] offset;
@@ -37,10 +38,10 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 		this.offset = p.getOffset();
 		int[] pref = p.getPrefDim();
 		double size = Math.max(pref[0], pref[1])+Math.max(offset[0], offset[1]);
-		if(size > 800) {
-			this.div = (size/800);
-		}else if (size < 800){
-			this.div = (1/(800/size));
+		if(size > maxSize) {
+			this.div = (size/maxSize);
+		}else if (size < maxSize){
+			this.div = (1/(maxSize/size));
 		}else {
 			this.div = 1;
 		}

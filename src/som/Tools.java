@@ -1,5 +1,9 @@
 package som;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class Tools {
 	
     public final static int TSP = 0;
@@ -11,6 +15,33 @@ public class Tools {
 			res+= Math.sqrt(Math.pow(v1[i]-v2[i],2));
 		}
 		return res;
+	}
+	
+	static Node[][] cloneNodes(Node[][] nodes){
+		Node[][] ret = new Node[nodes.length][nodes[0].length];
+		for (int i = 0; i < ret.length; i++) {
+			for (int j = 0; j < ret[0].length; j++) {
+				double[] orig = nodes[i][j].getWeights();
+				double[] w = new double[2];
+				w[0] = new Double(orig[0]);
+				w[1] = new Double(orig[1]);
+				ret[i][j] = new Node(w);
+			}
+		}
+		return ret;
+	}
+	
+	
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+	    return map.entrySet()
+	              .stream()
+	              .sorted(Map.Entry.comparingByValue(/*Collections.reverseOrder()*/))
+	              .collect(Collectors.toMap(
+	                Map.Entry::getKey, 
+	                Map.Entry::getValue, 
+	                (e1, e2) -> e1, 
+	                LinkedHashMap::new
+	              ));
 	}
 	
 	

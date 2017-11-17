@@ -27,10 +27,17 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	private final double div;
 	private final int mode;
 	private final double[] dim;
-	private final Color[] cols = new Color[] {Color.blue, Color.cyan, Color.yellow, Color.red, Color.green,
-			Color.orange, Color.pink, Color.magenta, new Color(170, 66, 244), new Color(209, 244, 66)};
-	
-	
+	private final Color[] cols = new Color[] {
+			Color.blue, 	//0
+			Color.cyan, 	//1
+			Color.yellow, 	//2
+			Color.red, 		//3
+			Color.green,	//4
+			Color.orange, 	//5
+			Color.pink, 	//6
+			Color.magenta, 	//7
+			new Color(170, 66, 244), //8 purple
+			new Color(209, 244, 66)}; //9 light green
 	public IMGvisualizer(MNISTproblem p, int mode, Node[][] nodes) {
 		this.nodes = nodes;
 		this.p = p;
@@ -94,7 +101,10 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 //		float b = (float) ((10.0+label*10)/255);
 //		System.out.println(r+" "+g+" "+b+"\n\n");
 //		return new Color(r,(float)0.0,(float)0.0);
-		return cols[(int)Math.round(label)];
+		int rounded = (int)Math.round(label);
+		//if transparency for nodes that 
+		return new Color(cols[rounded].getColorSpace(), cols[rounded].getColorComponents(null), (float)(1-1.5*Math.abs((label-rounded))));
+//		return cols[rounded];
 	}
 	
 	private void drawTemp(Graphics g) {
