@@ -1,9 +1,6 @@
 SOMtrainer som = new SOMtrainer("8",false, true,Tools.TSP, 200, 150,1, new double[] {300,1200}, 2000000, 20, 0.2, 100000);
 
-/slow
-SOMtrainer som = new SOMtrainer("8",false, true,Tools.IMG, 200, 20,20, new double[] {0,255}, 10000, 2, 0.02, 100);
+MNIST
+SOMtrainer som = new SOMtrainer("8",false, false,Tools.IMG, 1, 28,28, new double[] {0,255},40000, 28, 0.3, 2000, 10000, 100);
 
-
-//quick!
-SOMtrainer som = new SOMtrainer("8",false, false,Tools.IMG, 200, 20,20, new double[] {0,255},1000, 2, 0.2, 200);
 

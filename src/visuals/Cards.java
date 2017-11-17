@@ -4,17 +4,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
-
+import visuals.IMGvisualizer;
 import javax.swing.*;
 
 import caseloader.Problem;
 import caseloader.ProblemCreator.TSPproblem;
+import caseloader.ProblemCreator.MNISTproblem;
 import som.Node;
 import som.Tools;
 
  
 public class Cards implements ActionListener {
-    JPanel cards; //a panel that uses CardLayout
+    public JPanel cards; //a panel that uses CardLayout
 
     private final int MODE;
     private final String[] titles = new String[] {"TSP ", "Image "};
@@ -50,8 +51,8 @@ public class Cards implements ActionListener {
 //        		((TSPvisualizer) card1).display(0);
         		cards.add(card1, nodes.indexOf(node));
         	}else if(MODE==Tools.IMG) {
-        		System.out.println(".");
-//    			JPanel card1 = new MNISTVisualizer(this.p, nodes.indexOf(node));
+    			JPanel card1 = new IMGvisualizer((MNISTproblem)this.p, Tools.IMG, node);
+    			cards.add(card1, nodes.indexOf(node));
 //    			cards.add(card1, nodes.indexOf(node));
         	}
 		}

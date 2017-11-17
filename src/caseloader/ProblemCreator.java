@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 
 public class ProblemCreator {
@@ -18,7 +21,7 @@ public class ProblemCreator {
 	
 	
 	
-	public Problem create(String filename, int mode) throws IOException{
+	public Problem create(String filename, int mode, int trainCases, int testCases) throws IOException{
 		if(mode==TSP) {
 			filename = System.getProperty("user.dir")+"\\TSP\\"+filename+".txt";
 			FileReader fr = new FileReader(new File(filename));
@@ -79,16 +82,30 @@ public class ProblemCreator {
 			//test set
 
 			b.close();
+			
+			//partition sets
+			long seed = System.nanoTime();
+			Collections.shuffle(train, new Random(seed));
+			Collections.shuffle(trainLabels, new Random(seed));
+			ArrayList<double[]> tr = new ArrayList<double[]>(train.subList(0, trainCases));
+			ArrayList<Double> trLab = new ArrayList<Double>(trainLabels.subList(0, trainCases));
+			
+			seed = System.nanoTime();
+			Collections.shuffle(test, new Random(seed));
+			Collections.shuffle(testLabels, new Random(seed));
+			ArrayList<double[]> te = new ArrayList<double[]>(test.subList(0, testCases));
+			ArrayList<Double> teLab = new ArrayList<Double>(testLabels.subList(0, testCases));		
+			return new MNISTproblem(tr, te, trLab, teLab);
+//			return new MNISTproblem(train, test, trainLabels, testLabels);
 
-			return new MNISTproblem(train, test, trainLabels, testLabels);
 		}
 		return null;
 	}
 	
 	public static void main(String[] args) throws IOException {
-		ProblemCreator pc = new ProblemCreator();
-		MNISTproblem m = (MNISTproblem)pc.create("", MNIST);
-		System.out.println(m.getNumCases());
+//		ProblemCreator pc = new ProblemCreator();
+//		MNISTproblem m = (MNISTproblem)pc.create("", MNIST);
+//		System.out.println(m.getNumCases());
 	}
 	
 public class TSPproblem implements Problem{
@@ -157,13 +174,13 @@ public class TSPproblem implements Problem{
 
 public class MNISTproblem implements Problem{
 	
-	private ArrayList<double[]> train;
-	private ArrayList<double[]> test;
-	private ArrayList<Double> trainLabels;
-	private ArrayList<Double> testLabels;
+	private List<double[]> train;
+	private List<double[]> test;
+	private List<Double> trainLabels;
+	private List<Double> testLabels;
 	
 	
-	public MNISTproblem(ArrayList<double[]> train, ArrayList<double[]> test, ArrayList<Double> trainLabels, ArrayList<Double> testLabels) {
+	public MNISTproblem(List<double[]> train, List<double[]> test, List<Double> trainLabels, List<Double> testLabels) {
 		this.train = train;
 		this.test = test;
 		this.trainLabels = trainLabels;
@@ -193,7 +210,7 @@ public class MNISTproblem implements Problem{
 
 	@Override
 	public ArrayList<double[]> getAllCases() {
-		return this.train;
+		return (ArrayList<double[]>)this.train;
 	}
 
 	@Override
@@ -202,11 +219,11 @@ public class MNISTproblem implements Problem{
 	}
 
 	public ArrayList<double[]> getTest() {
-		return test;
+		return (ArrayList<double[]>) test;
 	}
 
 	public ArrayList<Double> getTestLabels() {
-		return testLabels;
+		return (ArrayList<Double>)testLabels;
 	}
 
 	@Override
