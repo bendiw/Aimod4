@@ -22,7 +22,7 @@ public class TSPvisualizer extends JPanel implements SOMvisualizer{
 	private final int RECT_DIM = 6;
 	private final int RECT_WIDTH;
 	private final int RECT_HEIGHT;
-	private JFrame frame;
+	public JFrame frame;
 	private static final int RECT_X = 10;
 	private static final int RECT_Y = RECT_X;
 	private static final int maxSize = 650;
