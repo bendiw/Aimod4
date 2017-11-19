@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 
 import java.util.ArrayList;
@@ -38,13 +39,27 @@ public class SOMtrainer {
 	private double timeConstant;
 	private boolean writeToFile;
 	private double[][][][] distMatrix;
-	private SOMvisualizer v;
+	private IMGvisualizer v;
+	private int currIteration;
+	private TSPvisualizer TSPv;
+	private Cards c;
 	
-	public SOMtrainer(String filename, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, double initRad, double initLearningRate, int displayInterval) throws IOException {
-		this(filename, false, false, mode, mbs, numNodesX, numNodesY, weightLimits, iterations,initRad, initLearningRate, displayInterval);
+	public void init(String filename, int mode, int mbs, int numNodesX, int numNodesY, int iterations, double initRad, double initLearningRate, int displayInterval, int trainCases, int testCases) throws IOException {
+		if(mode==Tools.TSP) {
+			init(filename, false, false, mode, mbs, numNodesX, numNodesY, new double[] {300,1200}, iterations,initRad, initLearningRate, displayInterval, trainCases, testCases);
+		}else {
+			init("8",false, false,Tools.IMG, mbs, numNodesX,numNodesY, new double[] {0,255},iterations, initRad, initLearningRate, displayInterval, trainCases, testCases);
+
+		}
+	
 	}
 	
-	public SOMtrainer(String filename, boolean initFromFile, boolean writeToFile, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, double initRad, double initLearningRate, int displayInterval) throws IOException {
+	public String testPython(int i) {
+		return "hello "+i;
+	}
+	
+	
+	public void init(String filename, boolean initFromFile, boolean writeToFile, int mode, int mbs, int numNodesX, int numNodesY, double[] weightLimits, int iterations, double initRad, double initLearningRate, int displayInterval, int trainCases, int testCases) throws IOException {
 		ProblemCreator pc = new ProblemCreator();
 		this.mode = mode;
 		this.distMatrix = new double[numNodesX][numNodesY][numNodesX][numNodesY];
@@ -57,8 +72,9 @@ public class SOMtrainer {
 		this.learningRate = this.initLearningRate;
 		this.iterations = iterations;
 		this.mbs = mbs;
-		this.p = pc.create(filename, mode);
+		this.p = pc.create(filename, mode, trainCases, testCases);
 		this.r = new Random();
+
 		if (! initFromFile) {
 			initNodes(numNodesX, numNodesY, weightLimits);
 			
@@ -73,18 +89,19 @@ public class SOMtrainer {
 		ArrayList<Node[][]> states = new ArrayList<Node[][]>();
 		if(mode==Tools.TSP) {
 //			this.v = new TSPvisualizer((TSPproblem)p, this.nodes, 0);		
-			states.add(Tools.cloneNodes(nodes));
+			states.add(Tools.cloneNodes(nodes, Tools.TSP));
 //			v.display(0);
 			System.out.println("Distance: "+getTotalDistance());
 		}else {
 			train = new boolean[p.getNumCases()];
-			System.out.println("learning rate: "+this.learningRate);
-			System.out.println("radius: "+Tools.getNeighborhoodRadius(this.initRadius, 0, this.timeConstant)+"\n\n");
-			this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
-			v.display(0);
+//			System.out.println("learning rate: "+this.learningRate);
+//			System.out.println("neighborhood radius: "+Tools.getNeighborhoodRadius(this.initRadius, 0, this.timeConstant)+"\n\n");
+//			this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
+//			v.display(0);
 
 		}
 		for (int i = 0; i < this.iterations; i++) {
+			currIteration = i;
 			if (this.mode == Tools.IMG) {
 				imageLoop(mbs, this.iterations);
 			} else {
@@ -99,15 +116,21 @@ public class SOMtrainer {
 //					this.v = new TSPvisualizer((TSPproblem)p, this.nodes, 0);		
 //					v.display(i);
 					if(i!=0) {
-						states.add(Tools.cloneNodes(this.nodes));
+						states.add(Tools.cloneNodes(this.nodes, Tools.TSP));
 						System.out.println("Distance: "+getTotalDistance());
 					}
 				}else {
-					System.out.println("iter "+i);
+					for (int i2 = 0; i2 < nodes.length; i2++) {
+						for (int j = 0; j < nodes[0].length; j++) {
+							nodes[i2][j].setLabelFromWins();
+						}
+					}
+					states.add(Tools.cloneNodes(this.nodes, Tools.IMG));
+					System.out.println("iteration "+i);
 					System.out.println("learning rate: "+this.learningRate);
-					System.out.println("radius: "+Tools.getNeighborhoodRadius(this.initRadius, i, this.timeConstant)+"\n\n");
-					this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
-					v.display(i);
+					System.out.println("Neighborhood radius: "+Tools.getNeighborhoodRadius(this.initRadius, i, this.timeConstant)+"\n\n");
+//					this.v = new IMGvisualizer((MNISTproblem)p, 1, this.nodes);
+//					v.display(i);
 				}
 			}
 		}
@@ -115,10 +138,11 @@ public class SOMtrainer {
 			saveNodes();
 		}
 		if(mode==Tools.TSP) {
-			TSPvisualizer TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
+			TSPv = new TSPvisualizer((TSPproblem)p, this.nodes,1);
 			TSPv.display(0);
-			Cards c = new Cards(states, this.mode, p);
+			c = new Cards(states, this.mode, p);
 		}else {
+			c = new Cards(states, this.mode, p);
 			System.out.println("Training set accuracy: "+testTrainIMG());
 			System.out.println("Test set accuracy: "+testIMG());
 		}
@@ -133,6 +157,15 @@ public class SOMtrainer {
 					}
 				}
 			}
+		}
+	}
+	
+	public void hideCards() {
+		if(this.c != null) {
+			SwingUtilities.getWindowAncestor(c.cards).dispose();
+		}
+		if(this.mode==Tools.TSP) {
+			TSPv.frame.dispose();
 		}
 	}
 	
@@ -152,21 +185,26 @@ public class SOMtrainer {
 	
 	private double testTrainIMG() {
 		int correct = 0;
+		int nonObserved = 0;
 		ArrayList<double[]> train = new ArrayList<double[]>();
 		ArrayList<Double> lab = new ArrayList<Double>();
 		for (int i = 0; i < p.getNumCases(); i++) {
 			if(this.train[i]) {
 				train.add(p.getCase(i));
 				lab.add(p.getLabel(i));
+			}else {
+				nonObserved++;
 			}
 		}
 		for (int i = 0; i < train.size(); i++) {
 			int[] winner = getWinnerIndex(train.get(i));
 			double num = (Math.round((double)nodes[winner[0]][winner[1]].getLabel()));
+//			System.out.println("num: "+num+", label: "+lab.get(i)+", equal: "+(num==lab.get(i)));
 			if(num==lab.get(i)) {
 				correct++;
 			}
 		}
+		System.out.println("unseen training cases: "+nonObserved);
 		return (double)correct/(double)train.size();
 	}
 	
@@ -176,14 +214,9 @@ public class SOMtrainer {
 			this.train[sampleIndex] = true;
 			double[] sample = p.getCase(sampleIndex);
 			int[] winner = getWinnerIndex(sample);
-			UpdateWeights(winner, i, iterations, sample);
+			UpdateWeights(winner, currIteration, iterations, sample);
 			nodes[winner[0]][winner[1]].addToWins(p.getLabel(sampleIndex));
 			sampleIndex++;
-		}
-		for (int i = 0; i < nodes.length; i++) {
-			for (int j = 0; j < nodes[0].length; j++) {
-				nodes[i][j].setLabelFromWins();
-			}
 		}
 	}
 	
@@ -382,7 +415,9 @@ public class SOMtrainer {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		SOMtrainer som = new SOMtrainer("8",false, false,Tools.IMG, 200, 20,20, new double[] {0,255},1000, 2, 0.2, 200);
+		SOMtrainer som = new SOMtrainer();
+//		som.init("8",	Tools.TSP, 200, 250,1, 2000000, 20, 0.2, 100000, 10000, 100);
+		som.init("8",false, false,Tools.IMG, 1, 28,28, new double[] {0,255},4000, 28, 0.3, 2000, 10000, 100);
 		som.run();
 	}
 }

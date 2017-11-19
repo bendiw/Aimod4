@@ -9,14 +9,14 @@ public class Node {
 	
 	private double[] weights;
 	private Object label;
-	private double winSum;
-	private int winNum;
+	private int[] winSum;
+//	private int winNum;
 	
 	public Node(double[] weights) {
 		this.weights = weights;
-		this.label = 0.0;
-		this.winSum = 0.0;
-		this.winNum = 0;
+		this.label = -1.0;
+		this.winSum = new int[10];
+//		this.winNum = 0;
 
 	}
 	
@@ -56,16 +56,26 @@ public class Node {
 	}
 	
 	public void addToWins(double label) {
-		this.winSum+=label;
-		this.winNum+=1;
+		this.winSum[(int)label]++;
+//		this.winNum+=1;
 	}
 	
 	public void setLabelFromWins() {
-		if(winNum>0) {
-			setLabel(winSum/(double)winNum);
-			this.winNum = 0;
-			this.winSum = 0;
-    }
+//		if(winNum>0) {
+//			setLabel(winSum/(double)winNum);
+//			this.winNum = 0;
+//			this.winSum = 0;
+//    }
+		int winner = -1;
+		int maxNum = 0;
+		for (int i = 0; i < winSum.length; i++) {
+			if(winSum[i]>maxNum) {
+				winner = i;
+				maxNum = winSum[i];
+			}
+		}
+//		winSum = new int[10];
+		this.label = (double)winner;
 	}
 
 }

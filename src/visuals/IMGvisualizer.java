@@ -20,7 +20,7 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	private final int RECT_WIDTH;
 	private final int RECT_HEIGHT;
 	private final int[] NEURON_DIM;
-	private JFrame frame;
+	public JFrame frame;
 	private static final int RECT_X = 10;
 	private static final int RECT_Y = RECT_X;
 	private Node[][] nodes;
@@ -37,7 +37,8 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 			Color.pink, 	//6
 			Color.magenta, 	//7
 			new Color(170, 66, 244), //8 purple
-			new Color(209, 244, 66)}; //9 light green
+			new Color(209, 244, 66)};//9 light green
+	
 	public IMGvisualizer(MNISTproblem p, int mode, Node[][] nodes) {
 		this.nodes = nodes;
 		this.p = p;
@@ -58,14 +59,16 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 		setOpaque(true);
 		setBackground(Color.WHITE);
 		frame = new JFrame("IMG");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().add(this);
 		frame.pack();
 		frame.setLocationByPlatform(true);
 	}
    
    
-   public void setNodes(Node[][] nodes) {
+
+
+public void setNodes(Node[][] nodes) {
 	   this.nodes=nodes;
    }
    
@@ -96,14 +99,19 @@ public class IMGvisualizer extends JPanel implements SOMvisualizer{
 	}
 	
 	private Color getCol(double label) {
-		float r = (float)((label/10));
+		if(label==-1.0) {
+			return Color.black;
+		}else {
+			
+			float r = (float)((label/10));
 //		float g = (float)((120.0+label*10)/255);
 //		float b = (float) ((10.0+label*10)/255);
 //		System.out.println(r+" "+g+" "+b+"\n\n");
 //		return new Color(r,(float)0.0,(float)0.0);
-		int rounded = (int)Math.round(label);
+			int rounded = (int)Math.round(label);
+			return new Color(cols[rounded].getColorSpace(), cols[rounded].getColorComponents(null), (float)(1-1.5*Math.abs((label-rounded))));
+		}
 		//if transparency for nodes that 
-		return new Color(cols[rounded].getColorSpace(), cols[rounded].getColorComponents(null), (float)(1-1.5*Math.abs((label-rounded))));
 //		return cols[rounded];
 	}
 	

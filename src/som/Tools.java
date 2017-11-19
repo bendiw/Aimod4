@@ -17,15 +17,21 @@ public class Tools {
 		return res;
 	}
 	
-	static Node[][] cloneNodes(Node[][] nodes){
+	static Node[][] cloneNodes(Node[][] nodes, int mode){
 		Node[][] ret = new Node[nodes.length][nodes[0].length];
 		for (int i = 0; i < ret.length; i++) {
 			for (int j = 0; j < ret[0].length; j++) {
+				
 				double[] orig = nodes[i][j].getWeights();
-				double[] w = new double[2];
-				w[0] = new Double(orig[0]);
-				w[1] = new Double(orig[1]);
+				double[] w = new double[orig.length];
+				
+				for (int k = 0; k < orig.length; k++) {
+					w[k] = new Double(orig[k]);
+				}
 				ret[i][j] = new Node(w);
+				if(mode==Tools.IMG) {
+					ret[i][j].setLabel(new Double((double)nodes[i][j].getLabel()));
+				}
 			}
 		}
 		return ret;
